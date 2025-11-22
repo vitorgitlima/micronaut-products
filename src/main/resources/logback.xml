@@ -8,6 +8,8 @@
         </encoder>
     </appender>
 
+    <logger name="com.vitorlima.udemy" level="debug" />
+
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
