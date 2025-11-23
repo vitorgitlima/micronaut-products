@@ -34,6 +34,13 @@ public class InMemoryStore {
         LOG.debug("Added Product: {}", novoProduto);
     }
 
+    public Product addProduct(Product product) {
+
+        products.put(product.id(), product);
+
+        return products.get(product.id());
+    }
+
     public Map<Integer, Product> getProducts() {
         return products;
     }
