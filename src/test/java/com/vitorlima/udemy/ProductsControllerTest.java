@@ -1,5 +1,6 @@
 package com.vitorlima.udemy;
 
+import com.vitorlima.udemy.domain.Product;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.json.JsonMapper;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @MicronautTest
 class ProductsControllerTest {
@@ -42,6 +44,16 @@ class ProductsControllerTest {
     private String logProducts(JsonNode response) throws IOException {
 
         return jsonMapper.writeValueAsString(response);
+    }
+
+    @Test
+    void canFetchProductByID(){
+
+        var response = client.toBlocking().retrieve(("/0"), Product.class);
+
+        assertEquals(0, response.id());
+        assertEquals(Product.Type.COFFEE, response.type());
+        assertNotNull(response.name());
     }
 
 }
