@@ -2,11 +2,14 @@ package com.vitorlima.udemy.controller.admin;
 
 import com.vitorlima.udemy.InMemoryStore;
 import com.vitorlima.udemy.domain.Product;
+import com.vitorlima.udemy.domain.UpdatedProductRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.Status;
 import io.micronaut.http.exceptions.HttpStatusException;
 
@@ -31,5 +34,13 @@ public class AdminProductsController {
         }
 
         return store.addProduct(product);
+    }
+
+    @Put("{id}")
+    public Product updateProduct(@PathVariable Integer id,
+                                 @Body UpdatedProductRequest request) {
+        var updatedProduct = new Product(id, request.name(), request.type());
+
+        return store.addProduct(updatedProduct);
     }
 }
