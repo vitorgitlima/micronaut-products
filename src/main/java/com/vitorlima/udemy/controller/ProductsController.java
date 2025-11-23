@@ -5,9 +5,12 @@ import com.vitorlima.udemy.domain.Product;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.QueryValue;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller("/products")
 public class ProductsController {
@@ -26,5 +29,19 @@ public class ProductsController {
     @Get("{id}")
     public Product getProduct(@PathVariable Integer id){
         return store.getProducts().get(id);
+    }
+
+    @Get("/filter{?max,offset}")
+    public List<Product> filteredProducts(
+            @QueryValue Optional<Integer> max,
+            @QueryValue Optional<Integer> offset
+    ){
+        return store.getProducts()
+                .values()
+                .stream()
+                .skip(offset.orElse(0))
+                .limit(max.orElse(0))
+                .toList();
+
     }
 }

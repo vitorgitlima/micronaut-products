@@ -28,8 +28,10 @@ public class InMemoryStore {
 
     private void addProduct(int id) {
 
-        var product = products.put(id, new Product(id, faker.coffee().blendName(), Product.Type.COFFEE));
-        LOG.debug("Added Product: {}", product);
+        var novoProduto = new Product(id, faker.coffee().blendName(), Product.Type.COFFEE);
+        products.put(id, novoProduto);
+
+        LOG.debug("Added Product: {}", novoProduto);
     }
 
     public Map<Integer, Product> getProducts() {
