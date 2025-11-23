@@ -2,6 +2,7 @@ package com.vitorlima.udemy.controller.admin;
 
 import com.vitorlima.udemy.InMemoryStore;
 import com.vitorlima.udemy.domain.Product;
+import com.vitorlima.udemy.domain.UpdatedProductRequest;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
@@ -62,6 +63,50 @@ class AdminProductsControllerTest {
 
         assertEquals(HttpStatus.CONFLICT, expectedConflit.getStatus());
     }
+
+    @Test
+    void aProductCanBeUpdatedUsingTheAdminPutendpoint(){
+        var productToUpdate = new Product(999, "old-value", Product.Type.OTHER);
+
+        store.getProducts().put(productToUpdate.id(), productToUpdate);
+        assertEquals(productToUpdate, store.getProducts().get(productToUpdate.id()));
+
+        var updatedRequest = new UpdatedProductRequest("new-value", Product.Type.TEA);
+
+        var response = client.toBlocking().exchange(
+                HttpRequest.PUT("/" + productToUpdate.id(), updatedRequest),
+                Product.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatus());
+
+        var productFromStore = store.getProducts().get(productToUpdate.id());
+        assertEquals(updatedRequest.name(), productFromStore.name());
+        assertEquals(updatedRequest.type(), productFromStore.type());
+    }
+
+    @Test
+    void aNonExistingProductWillBeAddedWhenUsingTheAdminPutEndpoint(){
+        var productId = 999;
+
+        store.getProducts().remove(productId);
+        assertNull(store.getProducts().get(productId));
+
+        var updatedRequest = new UpdatedProductRequest("new-value", Product.Type.TEA);
+
+        var response = client.toBlocking().exchange(
+                HttpRequest.PUT("/" + productId, updatedRequest),
+                Product.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatus());
+        var productFromStore = store.getProducts().get(productId);
+        assertEquals(updatedRequest.name(), productFromStore.name());
+        assertEquals(updatedRequest.type(), productFromStore.type());
+
+    }
+
+
 
 
 }
