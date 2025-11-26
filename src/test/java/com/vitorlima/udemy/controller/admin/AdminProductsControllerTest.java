@@ -103,7 +103,6 @@ class AdminProductsControllerTest {
         var productFromStore = store.getProducts().get(productId);
         assertEquals(updatedRequest.name(), productFromStore.name());
         assertEquals(updatedRequest.type(), productFromStore.type());
-
     }
 
 
